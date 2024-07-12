@@ -1,0 +1,52 @@
+prometheus:
+  serverFiles:
+    alerting_rules.yml:
+      groups:
+        - name: all-alerts
+          rules:
+            - alert: nginx DOWN
+              expr: up{service="nginx-local"} == 0 or absent(up{service="nginx-local"})
+              for: 10s
+              labels:
+                component: nginx
+                severity: critical
+                priority: 1
+              annotations:
+                summary: Nginx down. Please take action!
+                action: Restart or redeploy the service.
+            - alert: monitoring-demo Service DOWN
+              expr: up{service="monitoring-demo"} == 0 or absent(up{service="monitoring-demo"})
+              for: 10s
+              labels:
+                component: monitoring-demo
+                severity: warning
+                priority: 1
+              annotations:
+                summary: monitoring-demo service down. You wanna have a look!
+                action: Restart or redeploy the service.
+  
+  alertmanager:
+    config:
+      route:
+        group_by: ['severity']
+        group_wait: 1m
+        group_interval: 1m
+        repeat_interval: 12h
+        receiver: 'general-support'
+        routes:
+          - match:
+              severity: 'critical'
+            group_by: ['alertname']
+            group_wait: 0m
+            group_interval: 1m
+            repeat_interval: 1h    
+            receiver: '24x7-support'
+      receivers:       
+      - name: 'general-support'
+        msteams_configs:
+        - webhook_url: 'https://openvaluede.webhook.office.com/webhookb2/db1bf7ff-535c-4cc9-ba0b-a4e44fdfd79e@a762d01b-ef63-4687-97f9-c62294082cdb/IncomingWebhook/af0bcb21c1484403b6bb4d6e174d4ec7/2f2e2b70-7c67-4f02-818e-26559cf99fc8'
+          send_resolved: true
+      - name: '24x7-support'
+        msteams_configs:
+        - webhook_url: 'https://openvaluede.webhook.office.com/webhookb2/db1bf7ff-535c-4cc9-ba0b-a4e44fdfd79e@a762d01b-ef63-4687-97f9-c62294082cdb/IncomingWebhook/55fd93fb53024f528e97abec126aa838/2f2e2b70-7c67-4f02-818e-26559cf99fc8'
+          send_resolved: true
