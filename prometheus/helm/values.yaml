@@ -1,4 +1,8 @@
 prometheus:
+  server:
+    global:
+      scrape_interval: 10s
+      evaluation_interval: 1m
   serverFiles:
     alerting_rules.yml:
       groups:
