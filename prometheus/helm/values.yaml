@@ -44,9 +44,9 @@ prometheus:
       receivers:       
       - name: 'general-support'
         msteams_configs:
-        - webhook_url: 'https://openvaluede.webhook.office.com/webhookb2/db1bf7ff-535c-4cc9-ba0b-a4e44fdfd79e@a762d01b-ef63-4687-97f9-c62294082cdb/IncomingWebhook/af0bcb21c1484403b6bb4d6e174d4ec7/2f2e2b70-7c67-4f02-818e-26559cf99fc8'
+        - webhook_url: 'changeit'
           send_resolved: true
       - name: '24x7-support'
         msteams_configs:
-        - webhook_url: 'https://openvaluede.webhook.office.com/webhookb2/db1bf7ff-535c-4cc9-ba0b-a4e44fdfd79e@a762d01b-ef63-4687-97f9-c62294082cdb/IncomingWebhook/55fd93fb53024f528e97abec126aa838/2f2e2b70-7c67-4f02-818e-26559cf99fc8'
+        - webhook_url: 'changeit'
           send_resolved: true
