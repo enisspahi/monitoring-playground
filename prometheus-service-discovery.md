@@ -75,14 +75,14 @@ helm install prometheus-local prometheus-community/prometheus -f <your values.ya
 
 # Demo
 
-- Deploy `monitoring-demo` service
+- Deploy `demo-app` service
 ```
-helm upgrade --install monitoring-demo monitoring-demo/src/helm/
+helm upgrade --install demo-app helm/demo-app/
 ```
 
 - Provision prometheus stack
 ```
-helm upgrade --install prometheus-local prometheus/helm/ 
+helm upgrade --install prometheus-local helm/prometheus/ 
 ```
 
 ---

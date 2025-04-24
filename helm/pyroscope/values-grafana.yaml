@@ -1,0 +1,24 @@
+datasources:
+  pyroscope.yaml:
+    apiVersion: 1
+    datasources:
+      - name: Pyroscope
+        type: grafana-pyroscope-datasource
+        uid: pyroscope-test
+        url: http://pyroscope.pyroscope-test.svc.cluster.local:4040/
+
+env:
+  GF_INSTALL_PLUGINS: grafana-pyroscope-app
+  GF_AUTH_ANONYMOUS_ENABLED: "true"
+  GF_AUTH_ANONYMOUS_ORG_ROLE: Admin
+  GF_DIAGNOSTICS_PROFILING_ENABLED: "true"
+  GF_DIAGNOSTICS_PROFILING_ADDR: 0.0.0.0
+  GF_DIAGNOSTICS_PROFILING_PORT: "9094"
+
+podAnnotations:
+  profiles.grafana.com/cpu.scrape: "true"
+  profiles.grafana.com/cpu.port: "9094"
+  profiles.grafana.com/memory.scrape: "true"
+  profiles.grafana.com/memory.port: "9094"
+  profiles.grafana.com/goroutine.scrape: "true"
+  profiles.grafana.com/goroutine.port: "9094"

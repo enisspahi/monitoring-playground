@@ -1,0 +1,37 @@
+services:
+  pyroscope:
+    image: grafana/pyroscope
+    ports:
+      - 4040:4040
+  demo-app:
+    image: demo-app
+    ports:
+      - "8080:8080"
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    volumes:
+      - .pyroscope/pyroscope.jar:/app/pyroscope.jar:ro,z
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/app/pyroscope.jar
+      - PYROSCOPE_APPLICATION_NAME=demo-app
+      - PYROSCOPE_FORMAT=jfr
+      - PYROSCOPE_PROFILING_INTERVAL=10ms
+      - PYROSCOPE_PROFILER_EVENT=itimer
+      - PYROSCOPE_PROFILER_LOCK=10ms
+      - PYROSCOPE_PROFILER_ALLOC=512k
+      - PYROSCOPE_UPLOAD_INTERVAL=15s
+      - PYROSCOPE_LOG_LEVEL=debug
+      - PYROSCOPE_SERVER_ADDRESS=http://pyroscope:4040
+  grafana:
+    image: grafana/grafana:latest
+    platform: linux/amd64
+    environment:
+      - GF_INSTALL_PLUGINS=grafana-pyroscope-app
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+    volumes:
+      - ./grafana-provisioning:/etc/grafana/provisioning
+    ports:
+      - 3000:3000
