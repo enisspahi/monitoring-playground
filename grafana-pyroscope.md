@@ -1,11 +1,11 @@
 ---
 marp: true
 title: Grafana Pyroscope
-description: Continuos Profiling with Grafana Pyroscope
+description: Continuous Profiling with Grafana Pyroscope
 theme: uncover
 paginate: true
 _paginate: false
-header: "**Enis Spahi** Continuos Profiling with Grafana Pyroscope"
+header: "**Enis Spahi** Continuous Profiling with Grafana Pyroscope"
 style: |
   section {
     font-size: 30px;

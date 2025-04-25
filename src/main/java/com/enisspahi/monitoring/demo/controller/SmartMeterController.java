@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -17,7 +18,7 @@ import java.util.Random;
 @RestController
 public class SmartMeterController {
 
-    private static final Path CSV_PATH = Paths.get("/out/smartmeter-readings.csv");
+    private static final Path CSV_PATH = Paths.get(".out/smartmeter-readings.csv");
 
     private final Random random = new Random();
 
