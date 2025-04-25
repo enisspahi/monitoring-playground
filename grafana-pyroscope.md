@@ -5,7 +5,7 @@ description: Continuos Profiling with Grafana Pyroscope
 theme: uncover
 paginate: true
 _paginate: false
-header: "**Enis Spahi** Short and Sweet"
+header: "**Enis Spahi** Continuos Profiling with Grafana Pyroscope"
 style: |
   section {
     font-size: 30px;
@@ -47,7 +47,7 @@ docker run --rm --name pyroscope --network=pyroscope-demo -p 4040:4040 grafana/p
 
 ---
 
-# Demo 1: Kubernetes (Helm)
+# Demo 1: Docker Compose
 
 Provision Grafana Pyroscope and a Demo Application
 ```
@@ -59,7 +59,7 @@ just provision-pyroscope-docker-compose
 
 ---
 
-# Demo 2: Helm Installation
+# Demo 2: Kubernetes (Helm)
 
 Provision Grafana Pyroscope
 ```
@@ -77,16 +77,29 @@ minikube service grafana -n pyroscope-test
 minikube service demo-app -n pyroscope-test --url
 ```
 
+---
+
+## Key takeaways
+
+- Traditional profiling
+  - Deeper insights but overhead in PROD
+  - More suitable during development
+- Continuous profiling
+  - Cloud native
+  - Some profile types not supported (Pyroscope Java)
+  - Combinable with metrics, tracing 
+- Tuning / JVM Ergonomics
+  - Being conservative helps to discover performance issues
+  - `-Xmx`, `-XX:MaxRAMPercentage`
 
 ---
 
 
 # References
 
-- [alertmanager](https://prometheus.io/docs/alerting/latest/alertmanager/)
-- [Binary distributions](https://prometheus.io/download/)
-- [Docker image](https://hub.docker.com/r/prom/alertmanager)
-- [Helm chart](https://artifacthub.io/packages/helm/prometheus-community/prometheus)
+- [Grafana Pyroscope](https://grafana.com/docs/pyroscope/latest/)
+- [Application Observability Code Challenge 1 by Cees Bos](https://openvalue.blog/posts/2025/01/17/aocc-challenge-01/)
+- [Secrets of Performance Tuning Java on Kubernetes by Bruno Borges](https://youtu.be/wApqCjHWF8Q?si=xlPMICKCgGj9Tz0K)
 
 ---
 

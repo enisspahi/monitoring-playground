@@ -12,21 +12,19 @@ import java.math.RoundingMode;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 @RestController
 public class SmartMeterController {
 
-    private static final Path CSV_PATH = Paths.get("smartmeter-readings.csv");
+    private static final Path CSV_PATH = Paths.get("/out/smartmeter-readings.csv");
 
     private final Random random = new Random();
 
     @GetMapping("/sum")
     public BigDecimal sumSmartMeterValues() {
         try (var lines = Files.lines(CSV_PATH)) {
-            List<BigDecimal> readings = lines
+            var readings = lines
                     .map(String::trim)
                     .filter(line -> !line.isEmpty())
                     .map(BigDecimal::new)
@@ -38,10 +36,24 @@ public class SmartMeterController {
         }
     }
 
-//    private List<BigDecimal> generateRandomSmartMeterReadings(int count) {
-//        return IntStream.range(0, count)
-//                .mapToObj(i -> generateRandomKWhReading())
-//                .toList();
+
+//    @GetMapping("/sum")
+//    public BigDecimal sumSmartMeterValues() {
+//        try (BufferedReader reader = Files.newBufferedReader(CSV_PATH)) {
+//            BigDecimal sum = BigDecimal.ZERO;
+//            String line;
+//
+//            while ((line = reader.readLine()) != null) {
+//                line = line.trim();
+//                if (!line.isEmpty()) {
+//                    sum = sum.add(new BigDecimal(line));
+//                }
+//            }
+//
+//            return sum;
+//        } catch (IOException e) {
+//            throw new RuntimeException("Failed to read CSV: " + e.getMessage(), e);
+//        }
 //    }
 
     @PostMapping("/randomSmartMeterValues")

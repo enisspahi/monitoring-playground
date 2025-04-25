@@ -3,6 +3,8 @@ services:
     image: grafana/pyroscope
     ports:
       - 4040:4040
+    volumes:
+      - .data/:/data
   demo-app:
     image: demo-app
     ports:
@@ -13,16 +15,23 @@ services:
     volumes:
       - .pyroscope/pyroscope.jar:/app/pyroscope.jar:ro,z
     environment:
-      - JAVA_TOOL_OPTIONS=-javaagent:/app/pyroscope.jar
+      - JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75.0 -javaagent:/app/pyroscope.jar
+#      - JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75.0 -javaagent:/app/pyroscope.jar -XX:StartFlightRecording=filename=/out/recording.jfr
       - PYROSCOPE_APPLICATION_NAME=demo-app
+      - PYROSCOPE_LABELS=demo-label
       - PYROSCOPE_FORMAT=jfr
       - PYROSCOPE_PROFILING_INTERVAL=10ms
       - PYROSCOPE_PROFILER_EVENT=itimer
       - PYROSCOPE_PROFILER_LOCK=10ms
       - PYROSCOPE_PROFILER_ALLOC=512k
+      - PYROSCOPE_ALLOC_LIVE=true
       - PYROSCOPE_UPLOAD_INTERVAL=15s
       - PYROSCOPE_LOG_LEVEL=debug
       - PYROSCOPE_SERVER_ADDRESS=http://pyroscope:4040
+    deploy:
+      resources:
+        limits:
+          memory: 512M
   grafana:
     image: grafana/grafana:latest
     platform: linux/amd64
