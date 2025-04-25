@@ -24,10 +24,11 @@ style: |
 
 ## Grafana Pyroscope
 
-- Enables Cloud-native continuous profiling
-- Native integration in Grafana
+- Is a Profiling Backend
+- Native integration to Grafana ecosystem
   - Datasource
   - Plugin
+- Enables Cloud-native continuous profiling
 - No-code Java integration
   - Push via SDKs
   - Pull via Grafana Alloy (OpenTelemetry)
