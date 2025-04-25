@@ -8,7 +8,7 @@ _paginate: false
 header: "**Enis Spahi** Continuous Profiling with Grafana Pyroscope"
 style: |
   section {
-    font-size: 30px;
+    font-size: 26px;
   }
 ---
 
