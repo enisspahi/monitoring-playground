@@ -1,11 +1,7 @@
 package com.enisspahi.monitoring.demo.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -16,6 +12,7 @@ import java.nio.file.Paths;
 import java.util.Random;
 
 @RestController
+@RequestMapping("/smartMeters/")
 public class SmartMeterController {
 
     private static final Path CSV_PATH = Paths.get(".out/smartmeter-readings.csv");
@@ -37,7 +34,7 @@ public class SmartMeterController {
         }
     }
 
-
+//  Fixes out of memory error
 //    @GetMapping("/sum")
 //    public BigDecimal sumSmartMeterValues() {
 //        try (BufferedReader reader = Files.newBufferedReader(CSV_PATH)) {

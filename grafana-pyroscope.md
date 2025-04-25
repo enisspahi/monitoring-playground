@@ -20,6 +20,9 @@ style: |
 ## OutOfMemoryError
 # 😱
 
+A Smart Meter Aggregator faces OutOfMemoryError while calculating smart meter sum.
+We will troubleshoot this using Traditional and Continuous Profiling using Grafana Pyroscope.
+
 ---
 
 ## Grafana Pyroscope
@@ -45,22 +48,64 @@ style: |
 docker run --rm --name pyroscope --network=pyroscope-demo -p 4040:4040 grafana/pyroscope:latest
 ```
 - Kubernetes or Helm charts
+```
+helm upgrade -i -n pyroscope-test pyroscope grafana/pyroscope
+```
+
+---
+
+# Demo 0: Traditional Profiling 
+
+1. Start application with Flight recorder.
+```
+just run-app
+```
+
+2. Simulate successful aggregation of 1000000 smart meter values.
+```
+curl -L -X POST 'http://localhost:8080/smartMeters/randomSmartMeterValues?meterCount=1000000'
+curl -L 'http://localhost:8080/smartMeters/sum'
+```
+
+3. Simulate OutOfMemoryError during aggregation of 100000000 smart meter values.
+```
+curl -L -X POST 'http://localhost:8080/smartMeters/randomSmartMeterValues?meterCount=100000000'
+curl -L 'http://localhost:8080/smartMeters/sum'
+```
+
+4. Observe `recording.jfr` using JDK Mission Control.
+
+> ℹ️ Prerequisite: Just Command line runner (`brew install just`)
+> ℹ️ Prerequisite: JDK Mission Control installation
 
 ---
 
 # Demo 1: Docker Compose
 
-Provision Grafana Pyroscope and a Demo Application
+1. Provision Grafana Pyroscope and a Demo Application
 ```
 just provision-pyroscope-docker-compose
 ```
 
+2. Observe Profiling `http://localhost:3000/a/grafana-pyroscope-app`
 
-> ℹ️ Prerequisite: Just Command line runner (`brew install just`)
+3. Simulate successful aggregation of 1000000 smart meter values
+```
+curl -L -X POST 'http://localhost:8080/smartMeters/randomSmartMeterValues?meterCount=1000000'
+curl -L 'http://localhost:8080/smartMeters/sum'
+```
+
+4. Simulate OutOfMemoryError during aggregation of 100000000 smart meter values
+```
+curl -L -X POST 'http://localhost:8080/smartMeters/randomSmartMeterValues?meterCount=100000000'
+curl -L 'http://localhost:8080/smartMeters/sum'
+```
 
 ---
 
 # Demo 2: Kubernetes (Helm)
+
+> ⚠️️ This Demo has some failures and is working partially.
 
 Provision Grafana Pyroscope
 ```
@@ -74,8 +119,8 @@ just deploy-demo-app-k8
 
 Port forwarding (Optional)
 ```
-minikube service grafana -n pyroscope-test
-minikube service demo-app -n pyroscope-test --url
+kubectl -n pyroscope-test port-forward svc/grafana 3000:80
+kubectl -n pyroscope-test port-forward svc/demo-app 8080:8080 
 ```
 
 ---

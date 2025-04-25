@@ -1,6 +1,10 @@
 build:
     ./gradlew build
 
+run-app:
+    just build
+    java -Xmx1024m -XX:StartFlightRecording=filename=.out/recording.jfr -jar build/libs/monitoring-playground-0.0.1-SNAPSHOT.jar
+
 download-pyroscope:
     @mkdir -p docker/grafana_pyroscope/.pyroscope
     @echo "Downloading pyroscope.jar"
