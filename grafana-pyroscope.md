@@ -20,8 +20,8 @@ style: |
 ## OutOfMemoryError
 # 😱
 
-A Smart Meter Aggregator faces OutOfMemoryError while calculating smart meter sum.
-We will troubleshoot this using Traditional and Continuous Profiling using Grafana Pyroscope.
+A Smart Meter processor faces OutOfMemoryError while summing meter values.
+We will troubleshoot it using Traditional and Continuous Profiling.
 
 ---
 
