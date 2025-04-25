@@ -25,7 +25,7 @@ style: |
 ## Grafana Pyroscope
 
 - Is a Profiling Backend
-- Native integration to Grafana ecosystem
+- Native integration in Grafana ecosystem
   - Datasource
   - Plugin
 - Enables Cloud-native continuous profiling
