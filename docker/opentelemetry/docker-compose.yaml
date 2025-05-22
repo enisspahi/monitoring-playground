@@ -1,0 +1,107 @@
+services:
+  loki:
+    image: grafana/loki:3.5.0
+    command:
+      - -config.file=/etc/loki/loki-config.yaml
+    volumes:
+      - ./config/loki/loki-config.yaml:/etc/loki/loki-config.yaml
+      - data-loki:/loki
+    restart: unless-stopped
+  tempo-init:
+    image: grafana/tempo:2.7.2
+    user: root
+    entrypoint:
+      - "chown"
+      - "10001:10001"
+      - "/var/tempo"
+    volumes:
+      - data-tempo:/var/tempo
+  tempo:
+    image: grafana/tempo
+    command: [ "-config.file=/etc/tempo.yaml" ]
+    restart: unless-stopped
+    volumes:
+      - ./config/tempo/tempo-config.yaml:/etc/tempo.yaml
+      - data-tempo:/tmp/tempo
+  prometheus:
+    image: prom/prometheus:v3.4.0
+    restart: unless-stopped
+    ports:
+      - 9090:9090
+    volumes:
+      - ./config/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - data-prometheus:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--web.enable-remote-write-receiver'
+      - '--enable-feature=exemplar-storage'
+      - '--enable-feature=native-histograms'
+  pyroscope:
+    image: grafana/pyroscope
+    ports:
+      - 4040:4040
+  opentelemetry-collector:
+    image: otel/opentelemetry-collector-contrib:0.126.0
+    command: [ "--config=/etc/otel-collector-config.yaml" ]
+    volumes:
+      - ./config/opentelemetry-collector/otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "8889:8889"
+      - "4317:4317"
+      - "4318:4318"
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_INSTALL_PLUGINS=https://storage.googleapis.com/integration-artifacts/grafana-exploretraces-app/grafana-exploretraces-app-latest.zip;grafana-traces-app;grafana-pyroscope-app
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor traceToProfiles tracesEmbeddedFlameGraph
+    volumes:
+      - ./config/grafana-provisioning:/etc/grafana/provisioning
+    ports:
+      - 3000:3000
+  demo-app:
+    image: demo-app
+    ports:
+      - "8080:8080"
+    build:
+      context: ../../
+      dockerfile: Dockerfile
+    volumes:
+      #- .pyroscope/pyroscope.jar:/app/pyroscope.jar:ro,z
+      - .otel/opentelemetry-javaagent.jar:/app/opentelemetry-javaagent.jar:ro,z
+      - .pyroscope-otel/pyroscope-otel.jar:/app/pyroscope-otel.jar:ro,z
+      - .out/:/app/.out
+    environment:
+      #- JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75.0 -javaagent:/app/pyroscope.jar -javaagent:/app/opentelemetry-javaagent.jar
+      - JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75.0 -javaagent:/app/opentelemetry-javaagent.jar
+      - PYROSCOPE_APPLICATION_NAME=demo-app
+      - PYROSCOPE_FORMAT=jfr
+      - PYROSCOPE_PROFILING_INTERVAL=10ms
+      - PYROSCOPE_PROFILER_EVENT=itimer
+      - PYROSCOPE_PROFILER_LOCK=10ms
+      - PYROSCOPE_PROFILER_ALLOC=512k
+      - PYROSCOPE_ALLOC_LIVE=true
+      - PYROSCOPE_UPLOAD_INTERVAL=15s
+      - PYROSCOPE_LOG_LEVEL=debug
+      - PYROSCOPE_SERVER_ADDRESS=http://pyroscope:4040
+      - OTEL_SERVICE_NAME=demo-app
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://opentelemetry-collector:4317
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+      - OTEL_INSTRUMENTATION_COMMON_EXPERIMENTAL_CONTROLLER_TELEMETRY_ENABLED=true
+      - OTEL_INSTRUMENTATION_COMMON_EXPERIMENTAL_VIEW_TELEMETRY_ENABLED=true
+      - OTEL_PROFILING_ENABLED=true
+      - OTEL_JAVAAGENT_EXTENSIONS=./pyroscope-otel.jar
+      - OTEL_PYROSCOPE_ADD_PROFILE_URL=false
+      - OTEL_PYROSCOPE_ADD_PROFILE_BASELINE_URL=false
+      - OTEL_PYROSCOPE_START_PROFILING=true
+    deploy:
+      resources:
+        limits:
+          memory: 1024M
+
+volumes:
+  data-loki:
+  data-tempo:
+  data-prometheus:

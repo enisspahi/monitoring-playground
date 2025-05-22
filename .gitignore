@@ -37,6 +37,8 @@ out/
 .vscode/
 
 .pyroscope/
+.pyroscope-otel/
+.opentelemetry/
 .out/
 .data/
 
