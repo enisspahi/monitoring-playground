@@ -38,38 +38,13 @@ metrics_generator:
     # A list of labels that will be added to all generated metrics.
     external_labels:
       source: tempo
-  #  processor:
-  #    service_graphs:
-  #      wait: 30s
-  #      max_items: 10000
-  #      workers: 10
-  #      dimensions: []
-  #      #enable_client_server_prefix: false
-  #      peer_attributes:
-  #        - peer.service
-  #        - db.name
-  #        - db.system
-  #        - messaging.destination.name
-  #      # Enables additional labels for services and virtual nodes. Default false
-  #      enable_virtual_node_label: true
-  #      # If enabled another histogram will be produced for interactions over messaging systems middlewares
-  #      # If this feature is relevant over long time ranges (high latencies) - consider increasing
-  #      # `wait` value for this processor. Default false
-  #      # enable_messaging_system_latency_histogram: false
-  #      enable_messaging_system_latency_histogram: true
-  #    span_metrics:
-  #      enable_target_info: true
-  #    local_blocks:
-  #      filter_server_spans: false
-  #      flush_to_storage: true
+
   traces_storage:
     path: /tmp/tempo/generator/traces
 
 storage:
   trace:
     backend: local
-#    pool:
-#      queue_depth: 2000
     wal:
       path: /tmp/tempo/wal
     local:

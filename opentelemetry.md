@@ -47,7 +47,7 @@ OpenTelemetry is a set of standardized protocols, tools and libraries for instru
 
 1. Provision an observability stack and a Demo Application
 ```
-just provision-pyroscope-docker-compose
+just provision-opentelemetry-docker-compose
 ```
 
 2. Observe `http://localhost:3000/`
