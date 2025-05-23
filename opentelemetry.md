@@ -13,11 +13,13 @@ style: |
 
 ---
 
-## OpenTelemetry
+# OpenTelemetry
 
 ---
 
-![bg center 90%](docs/observability_without_otlp.png)
+### Observability Ecosystem
+
+![width:800px](docs/observability_without_otlp.png)
 
 ---
 
@@ -34,7 +36,7 @@ OpenTelemetry is a set of standardized protocols, tools and libraries for instru
 * Language SDKs:
   * Instrument your application and emit Metrics, Logs, Traces as signals
   * Java SDKs:
-    * [Agent](https://github.com/open-telemetry/opentelemetry-java-instrumentation)
+    * [Java Instrumentation Agent](https://github.com/open-telemetry/opentelemetry-java-instrumentation)
     * [Spring Boot Starter](https://opentelemetry.io/docs/zero-code/java/spring-boot-starter/)
     * [Quarkus OpenTelemetry extension](https://quarkus.io/guides/opentelemetry)
 * OpenTelemetry Collector:
@@ -66,19 +68,19 @@ curl -L 'http://localhost:8080/smartMeters/sum'
 
 ---
 
-# If have been using Prometheus
+# If I have been using Prometheus
 
 - `UP` metric not available
   - A [Health Check Extension](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/extension/healthcheckv2extension/README.md) as a replacement
-- [Histograms](https://opentelemetry.io/docs/specs/otel/compatibility/prometheus_and_openmetrics/)
+- [Histograms](https://opentelemetry.io/docs/specs/otel/compatibility/prometheus_and_openmetrics/) have different semantics
   - OpenTelemetry implements Exponential (Native) Histograms
-  - Prometheus Histogram feature in-progress is `--enable-feature=native-histograms`
+  - Prometheus Native Histograms in-progress `--enable-feature=native-histograms`
 
 ---
 
-# How to migrate from Prometheus?
+# How to migrate to OpenTelemetry?
 
-1. OpenTelemetry collector provides Prometheus receiver (drop-in-replacement) 
+1. OpenTelemetry Collector: Add Prometheus receiver (drop-in-replacement) 
 ```
 receivers:
   otlp:
@@ -94,8 +96,14 @@ receivers:
           static_configs:
             - targets: ['demo-app:8080']
 ```
-2. Switch off direct Prometheus scraping
-3. Replace Java SDK instrumentation with OpenTelemetry Java Agent (or other SDKs)
+2. Prometheus: Switch scrape target from direct to OpenTelemetry collector
+```
+scrape_configs:
+  - job_name: 'otel-collector'
+    static_configs:
+      - targets: ["opentelemetry-collector:8889"]
+```
+3. Application: Switch to OpenTelemetry Java Agent (or other SDKs)
 
 ---
 
