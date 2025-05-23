@@ -57,6 +57,3 @@ limits_config:
   reject_old_samples: false
   retention_period: 350d
   volume_enabled: true
-
-#compactor:
-#  retention_enabled: true
