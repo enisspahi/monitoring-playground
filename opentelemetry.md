@@ -115,4 +115,4 @@ scrape_configs:
 
 - [OpenTelemetry](https://opentelemetry.io/docs/)
 - [Grafana docs](https://grafana.com/docs/)
-- [Application Observability Code Challenge 1 by Cees Bos](https://openvalue.blog/posts/2025/01/17/aocc-challenge-01/)
+- [Observability Toolkit by Cees Bos](https://github.com/cbos/observability-toolkit)
