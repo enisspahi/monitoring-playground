@@ -25,7 +25,7 @@ style: |
 
 ## OpenTelemetry
 
-OpenTelemetry is a set of standardized protocols, tools and libraries for instrumenting to provide observability for applications.
+OpenTelemetry is a set of standardized APIs, tools, and libraries for instrumenting applications to provide observability through metrics, logs, and traces.
 
 ---
 
@@ -41,11 +41,12 @@ OpenTelemetry is a set of standardized protocols, tools and libraries for instru
     * [Quarkus OpenTelemetry extension](https://quarkus.io/guides/opentelemetry)
 * OpenTelemetry Collector:
   * Receives, processes and exports telemetry data to a backend
-  * Available as Binary, Docker image, Kubernetes Operator, Grafana Alloy
+  * Runnable as Binary, Docker image, Kubernetes Operator, Grafana Alloy
+  * Usually provided by monitoring-as-a-service providers such as Grafana Cloud, Datadog, etc
 
 ---
 
-# Demo
+# Demo 1
 
 1. Provision an observability stack and a Demo Application
 ```
@@ -60,9 +61,12 @@ curl -L -X POST 'http://localhost:8080/smartMeters/randomSmartMeterValues?meterC
 curl -L 'http://localhost:8080/smartMeters/sum'
 ```
 
+
+> ℹ️ Prerequisite: Just Command line runner (`brew install just`)
+
 ---
 
-# Demo
+# Demo 1 (Stack)
 
 ![width:800px](docs/OpenTelemetry.drawio.svg)
 
@@ -74,7 +78,7 @@ curl -L 'http://localhost:8080/smartMeters/sum'
   - A [Health Check Extension](https://github.com/open-telemetry/opentelemetry-collector-contrib/blob/main/extension/healthcheckv2extension/README.md) as a replacement
 - [Histograms](https://opentelemetry.io/docs/specs/otel/compatibility/prometheus_and_openmetrics/) have different semantics
   - OpenTelemetry implements Exponential (Native) Histograms
-  - Prometheus Native Histograms in-progress `--enable-feature=native-histograms`
+  - Prometheus native histograms are in progress and can be enabled with `--enable-feature=native-histograms`
 
 ---
 
@@ -112,7 +116,3 @@ scrape_configs:
 - [OpenTelemetry](https://opentelemetry.io/docs/)
 - [Grafana docs](https://grafana.com/docs/)
 - [Application Observability Code Challenge 1 by Cees Bos](https://openvalue.blog/posts/2025/01/17/aocc-challenge-01/)
-
----
-
-# Q&A
